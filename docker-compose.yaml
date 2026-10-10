@@ -1,0 +1,28 @@
+services:
+  qlcplus:
+    container_name: qlcplus
+    image: qlcplus:latest
+    hostname: qlcplus
+    restart: unless-stopped
+    networks:
+      default:
+        ipv4_address: 192.168.1.15
+    environment:
+      TZ: 'Europe/Amsterdam'
+  #  devices:
+#      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2453016-if00:/dev/ttyACM0
+    volumes:
+      - qlcplus:/QLC
+volumes:
+  qlcplus:
+    name: qlcplus
+    driver: local
+    driver_opts:
+      type: none
+      device: /docker/volumes/qlcplus
+      o: bind
+
+networks:
+  default:
+    name: physical
+    external: true
