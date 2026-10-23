@@ -1,6 +1,7 @@
 # curl https://www.qlcplus.org/downloads/5.3.0/qlcplus5_5.3.0_amd64.deb --output qlcplus5.deb
 # docker image build -t qlcplus .
 
+# //TODO the t64 dependencies do not work on ubuntu 26.04 (skill issue I am sure)
 FROM ubuntu:24.04
 
 #copy entrypoint script out of the dir
@@ -38,11 +39,15 @@ ENV QLC_DEPENDS="\
                 libusb-1.0-0 \
                 libxcb-cursor0 \
                 libxcb-xinerama0 \
+                usbutils \
+                udev \
                 bash"
 
 RUN apt update && apt upgrade -y
-RUN apt install -y ${QLC_DEPENDS} 
+RUN apt install -y ${QLC_DEPENDS}
 RUN apt clean
+
+RUN adduser root dialout
 
 RUN dpkg -i /QLC/qlcplus5.deb
 
