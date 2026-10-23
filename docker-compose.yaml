@@ -1,25 +1,29 @@
 services:
   qlcplus:
     container_name: qlcplus
-    image: qlcplus:latest
     hostname: qlcplus
+    image: tijmenvdklocal/qlcplus:latest
     restart: unless-stopped
     networks:
       default:
-        ipv4_address: 192.168.1.15
+        ipv4_address: 192.168.1.89
     environment:
       TZ: 'Europe/Amsterdam'
-  #  devices:
-#      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2453016-if00:/dev/ttyACM0
     volumes:
-      - qlcplus:/QLC
+      - qlcplusdata:/QLC
+      - /dev/bus/usb:/dev/bus/usb:ro
+    devices:
+      # use `lsusb` on the host to find the right device
+      - /dev/serial/by-id/usb-FTDI_FT232R_USB_UART_BH0006PU-if00-port0:/dev/ttyUSB0
+    privileged: true
+
 volumes:
-  qlcplus:
-    name: qlcplus
+  qlcplusdata:
+    name: qlcplusdata
     driver: local
     driver_opts:
       type: none
-      device: /docker/volumes/qlcplus
+      device: /docker/volumes/qlcplus/data
       o: bind
 
 networks:
